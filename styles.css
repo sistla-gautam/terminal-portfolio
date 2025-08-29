@@ -126,9 +126,9 @@ body {
 .dot {
   --terminal-dot-size: 12px;
   width: var(--terminal-dot-size);
-  height: var(--terminal-dot-size);
-  display: block;
+  height: auto;                       /* preserves aspect ratio of viewBox */
   flex: 0 0 auto;
+  display: inline-block;
 }
 
 /* draw the circle via SVG for pixel-precise roundness */
