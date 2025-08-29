@@ -124,41 +124,34 @@ body {
 }
 
 .dot {
-  /* keep existing visual styles */
-  background: transparent; /* color applied by specific variants */
-  border: 1px solid color-mix(in srgb, var(--fg), transparent 70%);
-  box-shadow: 0 1px 0 color-mix(in srgb, var(--bg), var(--fg) 8%) inset, 0 0 0 1px
-    color-mix(in srgb, var(--bg), var(--fg) 4%) inset;
-
-  /* circle sizing and anti-stretch */
   --terminal-dot-size: 12px;
   width: var(--terminal-dot-size);
   height: var(--terminal-dot-size);
-  aspect-ratio: 1 / 1;
-  box-sizing: border-box;
-  border-radius: 50%;
-
-  /* prevent flex from stretching the item */
+  display: block;
   flex: 0 0 auto;
-
-  /* avoid line-height influence when inline */
-  display: inline-block;
-  line-height: 0;
 }
 
+/* draw the circle via SVG for pixel-precise roundness */
+.dot circle {
+  fill: currentColor;
+  stroke: color-mix(in srgb, var(--fg), transparent 70%);
+  stroke-width: 1;
+}
+
+/* assign colors per button via currentColor */
 .dot-close {
-  background: var(--accent);
+  color: var(--accent);
 }
 .dot-minimize {
-  background: var(--primary);
+  color: var(--primary);
 }
 .dot-zoom {
-  background: var(--muted);
+  color: var(--muted);
 }
 
-.traffic-lights .dot:hover {
-  box-shadow: 0 1px 0 color-mix(in srgb, var(--bg), var(--fg) 12%) inset, 0 0 0 1px
-    color-mix(in srgb, var(--bg), var(--fg) 6%) inset;
+/* subtle hover state */
+.traffic-lights .dot:hover circle {
+  stroke: color-mix(in srgb, var(--bg), var(--fg) 12%);
 }
 
 .terminal-title {
