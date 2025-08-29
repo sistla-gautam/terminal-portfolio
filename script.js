@@ -21,50 +21,34 @@
     if (typeof s !== "string") return false
     try {
       const u = new URL(s, window.location.origin)
-      // Only treat as URL if protocol is http/https and original looked like a URL
       return /^https?:/i.test(u.protocol) && /^https?:\/\//i.test(s)
     } catch {
       return false
     }
   }
 
-  const copyToClipboard = async (text) => {
-    try {
-      await navigator.clipboard.writeText(text)
-      showToast("Copied")
-    } catch {
-      // Fallback
-      const ta = document.createElement("textarea")
-      ta.value = text
-      ta.style.position = "fixed"
-      ta.style.left = "-9999px"
-      document.body.appendChild(ta)
-      ta.focus()
-      ta.select()
-      try {
-        document.execCommand("copy")
-        showToast("Copied")
-      } catch (e) {
-        console.error("Copy failed", e)
-      } finally {
-        document.body.removeChild(ta)
-      }
-    }
+  // Clock prompt: update time every second
+  const clockLine = document.getElementById("clock-line")
+  const timeSpan = clockLine?.querySelector(".prompt-time")
+  const formatTime = () => {
+    const d = new Date()
+    // Example: Fri, Aug 29 2025 14:05:23
+    return d.toLocaleString(undefined, {
+      weekday: "short",
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    })
   }
-
-  let toastTimeout = null
-  const showToast = (msg) => {
-    let toast = document.querySelector(".toast")
-    if (!toast) {
-      toast = document.createElement("div")
-      toast.className = "toast"
-      document.body.appendChild(toast)
-    }
-    toast.textContent = msg
-    toast.classList.add("show")
-    clearTimeout(toastTimeout)
-    toastTimeout = setTimeout(() => toast.classList.remove("show"), 1200)
+  const tick = () => {
+    if (timeSpan) timeSpan.textContent = formatTime()
   }
+  tick()
+  setInterval(tick, 1000)
 
   // Rendering
   function renderJSON(data, container) {
@@ -74,7 +58,6 @@
   }
 
   function buildNode(value, key, depth, isLast) {
-    // Wrapper for a line (or a group for objects/arrays)
     if (Array.isArray(value)) {
       return buildArrayNode(value, key, depth, isLast)
     } else if (value !== null && typeof value === "object") {
@@ -95,7 +78,6 @@
 
     const content = document.createElement("span")
 
-    // "key": value
     if (key !== null && key !== undefined) {
       const k = document.createElement("span")
       k.className = "json-key"
@@ -108,10 +90,9 @@
       content.appendChild(colon)
     }
 
-    const { valueEl, rawText } = renderValue(value)
+    const { valueEl } = renderValue(value)
     content.appendChild(valueEl)
 
-    // Comma if not last
     if (!isLast) {
       const comma = document.createElement("span")
       comma.className = "json-punct"
@@ -119,10 +100,7 @@
       content.appendChild(comma)
     }
 
-    // Copy button
-    const copyBtn = makeCopyButton(key === null ? JSON.stringify(value) : JSON.stringify(value))
-
-    line.append(indent, content, copyBtn)
+    line.append(indent, content)
     return line
   }
 
@@ -132,7 +110,7 @@
 
     const details = document.createElement("details")
     details.className = "json-node"
-    details.open = true // default expanded
+    details.open = true
 
     const summary = document.createElement("summary")
     summary.setAttribute("role", "treeitem")
@@ -170,7 +148,6 @@
     openBrace.textContent = "{"
     content.appendChild(openBrace)
 
-    // If empty object, show {} and comma if needed
     if (!hasChildren) {
       const closeBrace = document.createElement("span")
       closeBrace.className = "json-punct"
@@ -185,11 +162,7 @@
       }
     }
 
-    // Copy button for the object
-    const copyBtn = makeCopyButton(JSON.stringify(obj, null, 2))
-    copyBtn.style.marginLeft = "auto"
-
-    line.append(indent, disclosure, content, copyBtn)
+    line.append(indent, disclosure, content)
     summary.appendChild(line)
     details.appendChild(summary)
 
@@ -207,7 +180,6 @@
         block.appendChild(childNode)
       })
 
-      // Closing brace line
       const closingLine = document.createElement("div")
       closingLine.className = "json-line"
       closingLine.style.setProperty("--indent", `${depth * 16}px`)
@@ -216,10 +188,9 @@
       closingIndent.className = "json-indent"
       closingIndent.setAttribute("aria-hidden", "true")
 
-      // keep arrow space alignment
       const arrowSpacer = document.createElement("span")
       arrowSpacer.className = "disclosure"
-      arrowSpacer.textContent = " " // spacer
+      arrowSpacer.textContent = " "
 
       const closingContent = document.createElement("span")
       const closeBrace = document.createElement("span")
@@ -301,11 +272,7 @@
       }
     }
 
-    // Copy button for array
-    const copyBtn = makeCopyButton(JSON.stringify(arr, null, 2))
-    copyBtn.style.marginLeft = "auto"
-
-    line.append(indent, disclosure, content, copyBtn)
+    line.append(indent, disclosure, content)
     summary.appendChild(line)
     details.appendChild(summary)
 
@@ -323,7 +290,6 @@
         block.appendChild(childNode)
       })
 
-      // Closing bracket line
       const closingLine = document.createElement("div")
       closingLine.className = "json-line"
       closingLine.style.setProperty("--indent", `${depth * 16}px`)
@@ -362,7 +328,6 @@
 
   function renderValue(v) {
     const span = document.createElement("span")
-    let rawText = ""
 
     if (typeof v === "string") {
       if (isURL(v)) {
@@ -383,57 +348,33 @@
         span.className = "json-string"
         span.textContent = JSON.stringify(v)
       }
-      rawText = JSON.stringify(v)
     } else if (typeof v === "number") {
       span.className = "json-number"
       span.textContent = String(v)
-      rawText = String(v)
     } else if (typeof v === "boolean") {
       span.className = "json-boolean"
       span.textContent = String(v)
-      rawText = String(v)
     } else if (v === null) {
       span.className = "json-null"
       span.textContent = "null"
-      rawText = "null"
     } else {
       span.textContent = String(v)
-      rawText = String(v)
     }
 
-    return { valueEl: span, rawText }
-  }
-
-  function makeCopyButton(textToCopy) {
-    const btn = document.createElement("button")
-    btn.type = "button"
-    btn.className = "copy-btn"
-    btn.textContent = "Copy"
-    btn.title = "Copy value to clipboard"
-    btn.setAttribute("aria-label", "Copy value to clipboard")
-
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation() // don't toggle details
-      copyToClipboard(textToCopy)
-    })
-
-    return btn
+    return { valueEl: span }
   }
 
   function attachAnimation(details, wrapper) {
-    // Based on height transition technique
     const onToggle = () => {
       const isOpen = details.open
       const section = wrapper
       const startHeight = section.getBoundingClientRect().height
 
-      // Prepare end height
       if (isOpen) {
         section.style.height = "auto"
         const endHeight = section.getBoundingClientRect().height
         section.style.height = "0px"
-        // force reflow
-        section.offsetHeight // eslint-disable-line no-unused-expressions
+        section.offsetHeight
         section.style.height = `${endHeight}px`
         const onEndOpen = () => {
           section.style.height = "auto"
@@ -443,13 +384,11 @@
       } else {
         const endHeight = 0
         section.style.height = `${startHeight}px`
-        // force reflow
-        section.offsetHeight // eslint-disable-line no-unused-expressions
+        section.offsetHeight
         section.style.height = `${endHeight}px`
       }
     }
 
-    // Initialize height for opened state
     if (details.open) {
       wrapper.style.height = "auto"
     } else {
