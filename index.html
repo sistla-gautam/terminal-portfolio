@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Terminal JSON Portfolio</title>
+    <meta name="description" content="A terminal-styled, collapsible JSON personal site." />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header" role="banner">
+      <h1 class="sr-only">Terminal JSON Portfolio</h1>
+    </header>
+
+    <main class="container" role="main">
+      <section class="terminal" aria-label="Terminal JSON Viewer">
+        <div class="terminal-header" role="group" aria-label="Terminal header">
+          <div class="terminal-title">json-viewer:~</div>
+        </div>
+        <div id="json-root" class="json-root" role="tree" aria-label="JSON content"></div>
+      </section>
+      <noscript>
+        <p class="no-js">
+          This site requires JavaScript to render the JSON content.
+        </p>
+      </noscript>
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
+      <p class="muted">Powered by vanilla JS • Auto dark/light mode</p>
+    </footer>
+
+    <script src="./script.js" defer></script>
+  </body>
+</html>

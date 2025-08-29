@@ -1,0 +1,44 @@
+{
+  "name": "Alex Doe",
+  "bio": "Full-stack developer crafting delightful web experiences with vanilla JS, TypeScript, and Next.js.",
+  "location": "Remote • UTC-5",
+  "contact": {
+    "email": "alex@example.com",
+    "website": "https://alex.example.com",
+    "github": "https://github.com/alexdoe",
+    "linkedin": "https://www.linkedin.com/in/alexdoe/"
+  },
+  "skills": ["JavaScript", "TypeScript", "React", "Next.js", "Node.js", "CSS", "Accessibility", "Testing"],
+  "projects": [
+    {
+      "name": "Terminal JSON Portfolio",
+      "description": "A personal site that mimics a terminal and renders collapsible JSON.",
+      "url": "https://alex.example.com/terminal-json",
+      "stack": ["HTML", "CSS", "JavaScript"]
+    },
+    {
+      "name": "Image Optimizer",
+      "description": "Transforms and optimizes images on-the-fly.",
+      "url": "https://github.com/alexdoe/image-optimizer",
+      "stack": ["Node.js", "Sharp", "Cloud Functions"]
+    }
+  ],
+  "experience": [
+    {
+      "company": "Acme Corp",
+      "role": "Senior Frontend Engineer",
+      "period": "2022 — Present",
+      "highlights": [
+        "Led migration to modern CSS architecture",
+        "Built internal component library with accessibility first"
+      ]
+    },
+    {
+      "company": "Beta Labs",
+      "role": "Software Engineer",
+      "period": "2019 — 2022",
+      "highlights": ["Shipped real-time collaboration features", "Maintained CI/CD pipelines and testing infra"]
+    }
+  ],
+  "links": ["https://alex.example.com", "https://github.com/alexdoe", "https://www.linkedin.com/in/alexdoe/"]
+}
