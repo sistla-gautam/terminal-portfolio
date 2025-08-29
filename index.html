@@ -16,9 +16,15 @@
     </header>
 
     <main class="container" role="main">
-      <section class="terminal" aria-label="Terminal JSON Viewer">
-        <div class="terminal-header" role="group" aria-label="Terminal header">
-          <div class="terminal-title">json-viewer:~</div>
+      <section class="terminal" aria-label="Terminal window">
+        <div class="terminal-header" role="group" aria-label="Terminal controls">
+          <div class="traffic-lights" aria-hidden="true">
+            <span class="dot dot-close"></span>
+            <span class="dot dot-minimize"></span>
+            <span class="dot dot-zoom"></span>
+          </div>
+          <div class="terminal-title" aria-label="Terminal title">bash — 80x24</div>
+          <div class="terminal-spacer" aria-hidden="true"></div>
         </div>
         <div class="terminal-prompt" aria-label="Terminal prompt">
           <div id="clock-line" class="prompt-line" aria-live="polite">
