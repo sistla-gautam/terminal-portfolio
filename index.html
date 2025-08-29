@@ -20,6 +20,17 @@
         <div class="terminal-header" role="group" aria-label="Terminal header">
           <div class="terminal-title">json-viewer:~</div>
         </div>
+        <div class="terminal-prompt" aria-label="Terminal prompt">
+          <div id="clock-line" class="prompt-line" aria-live="polite">
+            <span class="prompt-prefix">$</span>
+            <span class="prompt-time">--:--:--</span>
+            <span class="cursor" aria-hidden="true">▋</span>
+          </div>
+          <div class="prompt-line">
+            <span class="prompt-prefix">$</span>
+            <span>cat data.json</span>
+          </div>
+        </div>
         <div id="json-root" class="json-root" role="tree" aria-label="JSON content"></div>
       </section>
       <noscript>
