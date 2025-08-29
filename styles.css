@@ -249,13 +249,24 @@ details[open] .disclosure {
   border-left: 1px dashed color-mix(in srgb, var(--muted), transparent 40%);
   margin-left: 16px;
   padding-left: 12px;
+  transform-origin: top;
+  transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 220ms ease;
+}
+details:not([open]) .block {
+  transform: translateY(-4px);
+  opacity: 0.96;
 }
 
 /* Animated content wrapper */
 .collapsible {
   overflow: hidden;
   height: auto; /* will be controlled by JS for animation */
-  transition: height 180ms ease;
+  transition: height 220ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 220ms ease;
+  opacity: 1;
+  will-change: height, opacity;
+}
+details:not([open]) > .collapsible {
+  opacity: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -264,5 +275,13 @@ details[open] .disclosure {
   }
   .disclosure {
     transition: none;
+  }
+  /* disable slide/fade for reduced motion users */
+  .block {
+    transition: none;
+    transform: none;
+  }
+  details:not([open]) > .collapsible {
+    opacity: 1;
   }
 }
