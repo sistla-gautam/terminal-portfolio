@@ -7,7 +7,7 @@
     indentStep = mqlSmall.matches ? 12 : 16
     if (lastData) renderJSON(lastData, rootEl)
   })
-  const indentPx = (depth) => `${depth * indentStep}px`
+  const indentPx = (depth) => `${Math.max(0, depth) * indentStep}px`
 
   // Fetch and render
   fetch("./data.json", { cache: "no-store" })
@@ -41,7 +41,6 @@
   const timeSpan = clockLine?.querySelector(".prompt-time")
   const formatTime = () => {
     const d = new Date()
-    // Example: Fri, Aug 29 2025 14:05:23
     return d.toLocaleString(undefined, {
       weekday: "short",
       month: "short",
@@ -81,10 +80,6 @@
     line.className = "json-line"
     line.style.setProperty("--indent", indentPx(depth))
 
-    const indent = document.createElement("span")
-    indent.className = "json-indent"
-    indent.setAttribute("aria-hidden", "true")
-
     const content = document.createElement("span")
 
     if (key !== null && key !== undefined) {
@@ -109,7 +104,15 @@
       content.appendChild(comma)
     }
 
-    line.append(indent, content)
+    if (depth > 0) {
+      const indent = document.createElement("span")
+      indent.className = "json-indent"
+      indent.setAttribute("aria-hidden", "true")
+      line.append(indent, content)
+    } else {
+      line.append(content)
+    }
+
     return line
   }
 
@@ -129,14 +132,6 @@
     const line = document.createElement("div")
     line.className = "json-line"
     line.style.setProperty("--indent", indentPx(depth))
-
-    const indent = document.createElement("span")
-    indent.className = "json-indent"
-    indent.setAttribute("aria-hidden", "true")
-
-    const disclosure = document.createElement("span")
-    disclosure.className = "disclosure"
-    disclosure.textContent = "▸"
 
     const content = document.createElement("span")
     content.className = "summary-content"
@@ -172,7 +167,24 @@
       }
     }
 
-    line.append(indent, disclosure, content)
+    if (depth > 0) {
+      const indent = document.createElement("span")
+      indent.className = "json-indent"
+      indent.setAttribute("aria-hidden", "true")
+
+      const disclosure = document.createElement("span")
+      disclosure.className = "disclosure"
+      disclosure.textContent = "▸"
+
+      line.append(indent, disclosure, content)
+    } else {
+      const disclosure = document.createElement("span")
+      disclosure.className = "disclosure"
+      disclosure.textContent = "▸"
+
+      line.append(disclosure, content)
+    }
+
     summary.appendChild(line)
     details.appendChild(summary)
 
@@ -194,14 +206,6 @@
       closingLine.className = "json-line"
       closingLine.style.setProperty("--indent", indentPx(depth))
 
-      const closingIndent = document.createElement("span")
-      closingIndent.className = "json-indent"
-      closingIndent.setAttribute("aria-hidden", "true")
-
-      const arrowSpacer = document.createElement("span")
-      arrowSpacer.className = "disclosure"
-      arrowSpacer.textContent = " "
-
       const closingContent = document.createElement("span")
       const closeBrace = document.createElement("span")
       closeBrace.className = "json-punct"
@@ -215,7 +219,23 @@
         closingContent.appendChild(comma)
       }
 
-      closingLine.append(closingIndent, arrowSpacer, closingContent)
+      if (depth > 0) {
+        const closingIndent = document.createElement("span")
+        closingIndent.className = "json-indent"
+        closingIndent.setAttribute("aria-hidden", "true")
+
+        const arrowSpacer = document.createElement("span")
+        arrowSpacer.className = "disclosure"
+        arrowSpacer.textContent = " "
+
+        closingLine.append(closingIndent, arrowSpacer, closingContent)
+      } else {
+        const arrowSpacer = document.createElement("span")
+        arrowSpacer.className = "disclosure"
+        arrowSpacer.textContent = " "
+
+        closingLine.append(arrowSpacer, closingContent)
+      }
 
       wrapper.append(block, closingLine)
       details.appendChild(wrapper)
@@ -241,14 +261,6 @@
     const line = document.createElement("div")
     line.className = "json-line"
     line.style.setProperty("--indent", indentPx(depth))
-
-    const indent = document.createElement("span")
-    indent.className = "json-indent"
-    indent.setAttribute("aria-hidden", "true")
-
-    const disclosure = document.createElement("span")
-    disclosure.className = "disclosure"
-    disclosure.textContent = "▸"
 
     const content = document.createElement("span")
     content.className = "summary-content"
@@ -283,7 +295,24 @@
       }
     }
 
-    line.append(indent, disclosure, content)
+    if (depth > 0) {
+      const indent = document.createElement("span")
+      indent.className = "json-indent"
+      indent.setAttribute("aria-hidden", "true")
+
+      const disclosure = document.createElement("span")
+      disclosure.className = "disclosure"
+      disclosure.textContent = "▸"
+
+      line.append(indent, disclosure, content)
+    } else {
+      const disclosure = document.createElement("span")
+      disclosure.className = "disclosure"
+      disclosure.textContent = "▸"
+
+      line.append(disclosure, content)
+    }
+
     summary.appendChild(line)
     details.appendChild(summary)
 
@@ -305,14 +334,6 @@
       closingLine.className = "json-line"
       closingLine.style.setProperty("--indent", indentPx(depth))
 
-      const closingIndent = document.createElement("span")
-      closingIndent.className = "json-indent"
-      closingIndent.setAttribute("aria-hidden", "true")
-
-      const arrowSpacer = document.createElement("span")
-      arrowSpacer.className = "disclosure"
-      arrowSpacer.textContent = " "
-
       const closingContent = document.createElement("span")
       const closeBracket = document.createElement("span")
       closeBracket.className = "json-punct"
@@ -326,7 +347,23 @@
         closingContent.appendChild(comma)
       }
 
-      closingLine.append(closingIndent, arrowSpacer, closingContent)
+      if (depth > 0) {
+        const closingIndent = document.createElement("span")
+        closingIndent.className = "json-indent"
+        closingIndent.setAttribute("aria-hidden", "true")
+
+        const arrowSpacer = document.createElement("span")
+        arrowSpacer.className = "disclosure"
+        arrowSpacer.textContent = " "
+
+        closingLine.append(closingIndent, arrowSpacer, closingContent)
+      } else {
+        const arrowSpacer = document.createElement("span")
+        arrowSpacer.className = "disclosure"
+        arrowSpacer.textContent = " "
+
+        closingLine.append(arrowSpacer, closingContent)
+      }
 
       wrapper.append(block, closingLine)
       details.appendChild(wrapper)
@@ -412,7 +449,6 @@
   const applyCodeSize = (rem) => {
     document.documentElement.style.setProperty("--code-size", `${rem}rem`)
   }
-  // Start from current CSS variable if present
   const initialCodeSize =
     Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--code-size")) || 0.95
   let codeSize = initialCodeSize
@@ -429,7 +465,6 @@
     codeSize = Math.min(MAX_SIZE, +(codeSize + STEP).toFixed(2))
     applyCodeSize(codeSize)
   })
-  // Wrap toggle
   const wrapToggle = document.getElementById("wrap-toggle")
   if (wrapToggle) {
     const syncWrap = () => {
