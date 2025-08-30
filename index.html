@@ -4,6 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>s.gautam</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="alternate icon" type="image/x-icon" href="favicon.ico" />
   <style>
     html, body {
       margin: 0;
@@ -83,7 +85,7 @@
     }
 
     function linkifyEsc(escaped){
-      const urlRe = /(https?:\/\/[^\s<>"]+)/g;
+      const urlRe = /(https?:\/\/[^\s<>\"]+)/g;
       return escaped.replace(urlRe, u => `<a href="${u}" target="_blank" rel="noopener noreferrer">${u}</a>`);
     }
 
