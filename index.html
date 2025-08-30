@@ -1,73 +1,110 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover"
-    />
-    <title>Terminal JSON Portfolio</title>
-    <meta name="description" content="A terminal-styled, collapsible JSON personal site." />
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body>
-    <header class="site-header" role="banner">
-      <h1 class="sr-only">Terminal JSON Portfolio</h1>
-    </header>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>personal.json</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background: #2e3440;
+      color: #d8dee9;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    pre {
+      margin: 0;
+      padding: 1rem;
+      white-space: pre;
+      overflow: auto;
+    }
+    .header {
+      padding: 0.5rem 1rem;
+      background: #3b4252;
+      color: #a3be8c;
+      font-weight: bold;
+    }
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 1em;
+      vertical-align: bottom;
+      background: #d8dee9;
+      animation: blink 1s step-start infinite;
+    }
+    @keyframes blink {
+      50% { background: transparent; }
+    }
 
-    <main class="container" role="main">
-      <section class="terminal" aria-label="Terminal window">
-        <div class="terminal-header" role="group" aria-label="Terminal controls">
-          <div class="traffic-lights" aria-hidden="true">
-            <svg class="dot dot-close" viewBox="0 0 12 12" aria-hidden="true" focusable="false">
-              <circle cx="6" cy="6" r="5"></circle>
-            </svg>
-            <svg class="dot dot-minimize" viewBox="0 0 12 12" aria-hidden="true" focusable="false">
-              <circle cx="6" cy="6" r="5"></circle>
-            </svg>
-            <svg class="dot dot-zoom" viewBox="0 0 12 12" aria-hidden="true" focusable="false">
-              <circle cx="6" cy="6" r="5"></circle>
-            </svg>
-          </div>
-          <div class="terminal-title" aria-label="Terminal title">zsh — 80x24</div>
-          <div class="terminal-spacer" aria-hidden="true"></div>
-        </div>
-        <div class="terminal-prompt" aria-label="Terminal prompt">
-          <div id="clock-line" class="prompt-line" aria-live="polite">
-            <span class="prompt-prefix">$</span>
-            <span class="prompt-time">--:--:--</span>
-            <span class="cursor" aria-hidden="true">▋</span>
-          </div>
-          <div class="prompt-line">
-            <span class="prompt-prefix">$</span>
-            <span>cat data.json</span>
-          </div>
-        </div>
-        <div class="tools-bar" role="toolbar" aria-label="Viewing tools">
-          <div class="tools-left">
-            <button id="font-dec" class="tool-btn" type="button" aria-label="Decrease font size">A-</button>
-            <button id="font-inc" class="tool-btn" type="button" aria-label="Increase font size">A+</button>
-          </div>
-          <div class="tools-right">
-            <label class="wrap-label">
-              <input id="wrap-toggle" type="checkbox" checked aria-label="Toggle line wrapping" />
-              <span>Wrap</span>
-            </label>
-          </div>
-        </div>
-        <div id="json-root" class="json-root wrap" role="tree" aria-label="JSON content"></div>
-      </section>
-      <noscript>
-        <p class="no-js">
-          This site requires JavaScript to render the JSON content.
-        </p>
-      </noscript>
-    </main>
+    /* Nord palette */
+    .k { color: #81a1c1; }
+    .s { color: #88c0d0; }
+    .n { color: #b48ead; }
+    .b { color: #bf616a; }
+    .p { color: #eceff4; }
+    a { color: #8fbcbb; text-decoration: none; }
+    a:hover { text-decoration: underline; }
 
-    <footer class="site-footer" role="contentinfo">
-      <p class="muted">Powered by chai • Written with Keyboard 🫶</p>
-    </footer>
+    @media (prefers-color-scheme: light) {
+      html, body { background: #eceff4; color: #2e3440; }
+      .header { background: #d8dee9; color: #5e81ac; }
+      .cursor { background: #2e3440; }
+      .k { color: #5e81ac; }
+      .s { color: #d08770; }
+      .n { color: #a3be8c; }
+      .b { color: #bf616a; }
+      .p { color: #2e3440; }
+      a { color: #5e81ac; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header" id="header"></div>
+  <pre id="out"></pre>
 
-    <script src="./script.js" defer></script>
-  </body>
+  <script>
+    function escapeHtml(s){
+      return s.replace(/[&<>\"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
+    }
+
+    function linkify(str){
+      const urlRe = /(https?:\/\/[^\s\"']+)/g;
+      return str.replace(urlRe, u => `<a href="${u}" target="_blank" rel="noopener noreferrer">${u}</a>`);
+    }
+
+    function syntaxHighlight(json){
+      const text = JSON.stringify(json, null, 2);
+      const esc = escapeHtml(text)
+        .replace(/\"(.*?)\"(?=\s*:)/g, '<span class="k">"$1"</span>')
+        .replace(/:\s*\"(.*?)\"/g, match => `: <span class="s">${linkify(match.slice(2))}</span>`)
+        .replace(/\b(true|false)\b/g, '<span class="b">$1</span>')
+        .replace(/\b(-?\d+(?:\.\d+)?)\b/g, '<span class="n">$1</span>');
+      return esc.replace(/[\{\}\[\]\:,]/g, m => `<span class="p">${m}</span>`);
+    }
+
+    const header = document.getElementById('header');
+
+    function updateHeader() {
+      const now = new Date();
+      const dateStr = now.toLocaleString();
+      header.innerHTML = `${dateStr}  ~/user/personal.json <span class="cursor"></span>`;
+    }
+
+    setInterval(updateHeader, 1000);
+    updateHeader();
+
+    fetch('./data.json')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('out').innerHTML = syntaxHighlight(data);
+      })
+      .catch(err => {
+        document.getElementById('out').textContent = 'Error loading data.json: ' + err;
+      });
+  </script>
+</body>
 </html>
