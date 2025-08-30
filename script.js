@@ -1,5 +1,13 @@
 ;(() => {
   const rootEl = document.getElementById("json-root")
+  let lastData = null
+  const mqlSmall = window.matchMedia("(max-width: 768px)")
+  let indentStep = mqlSmall.matches ? 12 : 16
+  mqlSmall.addEventListener?.("change", () => {
+    indentStep = mqlSmall.matches ? 12 : 16
+    if (lastData) renderJSON(lastData, rootEl)
+  })
+  const indentPx = (depth) => `${depth * indentStep}px`
 
   // Fetch and render
   fetch("./data.json", { cache: "no-store" })
@@ -8,8 +16,8 @@
       return res.json()
     })
     .then((data) => {
-      renderJSON(data, rootEl)
-      setupAutoMobileAutoCollapse(rootEl)
+      lastData = data
+      renderJSON(lastData, rootEl)
     })
     .catch((err) => {
       console.error(err)
@@ -71,7 +79,7 @@
   function buildPrimitiveLine(value, key, depth, isLast) {
     const line = document.createElement("div")
     line.className = "json-line"
-    line.style.setProperty("--indent", `${depth * 16}px`)
+    line.style.setProperty("--indent", indentPx(depth))
 
     const indent = document.createElement("span")
     indent.className = "json-indent"
@@ -120,7 +128,7 @@
 
     const line = document.createElement("div")
     line.className = "json-line"
-    line.style.setProperty("--indent", `${depth * 16}px`)
+    line.style.setProperty("--indent", indentPx(depth))
 
     const indent = document.createElement("span")
     indent.className = "json-indent"
@@ -184,7 +192,7 @@
 
       const closingLine = document.createElement("div")
       closingLine.className = "json-line"
-      closingLine.style.setProperty("--indent", `${depth * 16}px`)
+      closingLine.style.setProperty("--indent", indentPx(depth))
 
       const closingIndent = document.createElement("span")
       closingIndent.className = "json-indent"
@@ -232,7 +240,7 @@
 
     const line = document.createElement("div")
     line.className = "json-line"
-    line.style.setProperty("--indent", `${depth * 16}px`)
+    line.style.setProperty("--indent", indentPx(depth))
 
     const indent = document.createElement("span")
     indent.className = "json-indent"
@@ -295,7 +303,7 @@
 
       const closingLine = document.createElement("div")
       closingLine.className = "json-line"
-      closingLine.style.setProperty("--indent", `${depth * 16}px`)
+      closingLine.style.setProperty("--indent", indentPx(depth))
 
       const closingIndent = document.createElement("span")
       closingIndent.className = "json-indent"
@@ -401,140 +409,34 @@
     details.addEventListener("toggle", onToggle)
   }
 
-  function setupAutoMobileAutoCollapse(root) {
-    if (!root) return
-
-    const mqlSmall = window.matchMedia("(max-width: 768px)")
-    const mqlReduced = window.matchMedia("(prefers-reduced-motion: reduce)")
-    let enabled = false
-
-    /** @type {{el: HTMLDetailsElement, sum: HTMLElement|null, parent: HTMLDetailsElement|null, depth: number, isRoot: boolean}[]} */
-    let items = []
-    let lastManualTS = 0
-
-    const collectDetails = () => {
-      const nodes = Array.from(root.querySelectorAll("details.json-node"))
-      items = nodes.map((d) => {
-        const sum = d.querySelector(":scope > summary")
-        // mark manual interactions on summary clicks to avoid fighting the user
-        if (sum && !sum.dataset._mobBound) {
-          sum.addEventListener(
-            "click",
-            () => {
-              lastManualTS = Date.now()
-            },
-            { passive: true },
-          )
-          sum.dataset._mobBound = "1"
-        }
-        const parent = d.parentElement?.closest("details.json-node")
-        const depth = Number.parseInt(d.dataset.depth || "0", 10)
-        return { el: d, sum, parent, depth, isRoot: depth === 0 }
-      })
+  const applyCodeSize = (rem) => {
+    document.documentElement.style.setProperty("--code-size", `${rem}rem`)
+  }
+  // Start from current CSS variable if present
+  const initialCodeSize =
+    Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--code-size")) || 0.95
+  let codeSize = initialCodeSize
+  const MIN_SIZE = 0.8
+  const MAX_SIZE = 1.3
+  const STEP = 0.05
+  const btnDec = document.getElementById("font-dec")
+  const btnInc = document.getElementById("font-inc")
+  btnDec?.addEventListener("click", () => {
+    codeSize = Math.max(MIN_SIZE, +(codeSize - STEP).toFixed(2))
+    applyCodeSize(codeSize)
+  })
+  btnInc?.addEventListener("click", () => {
+    codeSize = Math.min(MAX_SIZE, +(codeSize + STEP).toFixed(2))
+    applyCodeSize(codeSize)
+  })
+  // Wrap toggle
+  const wrapToggle = document.getElementById("wrap-toggle")
+  if (wrapToggle) {
+    const syncWrap = () => {
+      rootEl.classList.toggle("wrap", wrapToggle.checked)
+      rootEl.classList.toggle("nowrap", !wrapToggle.checked)
     }
-
-    const ensureAncestorsOpen = (node) => {
-      let current = node
-      while (current) {
-        if (!current.open) current.open = true
-        current = current.parentElement?.closest("details.json-node")
-      }
-    }
-
-    const updateView = () => {
-      if (!enabled) return
-      if (Date.now() - lastManualTS < 1200) return // pause briefly after manual toggle
-      if (!items.length) return
-
-      // Always keep the root(s) open
-      for (const it of items) {
-        if (it.isRoot && !it.el.open) it.el.open = true
-      }
-
-      const centerY = window.innerHeight / 2
-      let best = null
-      let bestDist = Number.POSITIVE_INFINITY
-
-      for (const it of items) {
-        const anchor = it.sum || it.el
-        const r = anchor.getBoundingClientRect()
-        const cy = r.top + r.height / 2
-        const dist = Math.abs(cy - centerY)
-        if (dist < bestDist) {
-          bestDist = dist
-          best = it
-        }
-      }
-      if (!best) return
-
-      // Open the nearest section and all its ancestors
-      if (!best.el.open) best.el.open = true
-      ensureAncestorsOpen(best.el)
-
-      // Collapse only siblings that share the same parent (same depth)
-      const siblings = items.filter((it) => it.parent === best.parent && it.el !== best.el)
-
-      const collapseThreshold = Math.max(280, window.innerHeight * 0.9)
-      for (const sib of siblings) {
-        if (sib.isRoot) continue // never collapse root
-        const anchor = sib.sum || sib.el
-        const r = anchor.getBoundingClientRect()
-        const cy = r.top + r.height / 2
-        const dist = Math.abs(cy - centerY)
-        if (dist > collapseThreshold && sib.el.open) {
-          sib.el.open = false
-        }
-      }
-    }
-
-    let ticking = false
-    const onScroll = () => {
-      if (!enabled) return
-      if (ticking) return
-      ticking = true
-      requestAnimationFrame(() => {
-        updateView()
-        ticking = false
-      })
-    }
-
-    const onResize = () => {
-      collectDetails()
-      updateView()
-    }
-
-    const activate = () => {
-      if (enabled) return
-      if (mqlReduced.matches) return
-      enabled = true
-      collectDetails()
-      // keep root open immediately upon activation
-      for (const it of items) {
-        if (it.isRoot && !it.el.open) it.el.open = true
-      }
-      window.addEventListener("scroll", onScroll, { passive: true })
-      window.addEventListener("resize", onResize)
-      updateView()
-    }
-
-    const deactivate = () => {
-      if (!enabled) return
-      enabled = false
-      window.removeEventListener("scroll", onScroll)
-      window.removeEventListener("resize", onResize)
-    }
-
-    const reevaluate = () => {
-      if (mqlSmall.matches && !mqlReduced.matches) {
-        activate()
-      } else {
-        deactivate()
-      }
-    }
-
-    // react to preference/viewport changes
-    mqlSmall.addEventListener?.("change", reevaluate)
-    mqlReduced.addEventListener?.("change", reevaluate)
-    reevaluate()
+    syncWrap()
+    wrapToggle.addEventListener("change", syncWrap)
   }
 })()
