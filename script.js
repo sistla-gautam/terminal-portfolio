@@ -9,6 +9,7 @@
     })
     .then((data) => {
       renderJSON(data, rootEl)
+      setupAutoMobileAutoCollapse(rootEl)
     })
     .catch((err) => {
       console.error(err)
@@ -396,5 +397,122 @@
     }
 
     details.addEventListener("toggle", onToggle)
+  }
+
+  function setupAutoMobileAutoCollapse(root) {
+    if (!root) return
+
+    const mqlSmall = window.matchMedia("(max-width: 768px)")
+    const mqlReduced = window.matchMedia("(prefers-reduced-motion: reduce)")
+    let enabled = false
+    let detailsList = []
+    const scrollHandler = null
+    const resizeHandler = null
+    let lastManualTS = 0
+
+    const collectDetails = () => {
+      detailsList = Array.from(root.querySelectorAll("details.json-node"))
+      // mark manual interactions on summary clicks to avoid fighting the user
+      detailsList.forEach((d) => {
+        const sum = d.querySelector(":scope > summary")
+        if (sum && !sum.dataset._mobBound) {
+          sum.addEventListener(
+            "click",
+            () => {
+              lastManualTS = Date.now()
+            },
+            { passive: true },
+          )
+          sum.dataset._mobBound = "1"
+        }
+      })
+    }
+
+    const updateView = () => {
+      if (!enabled) return
+      if (Date.now() - lastManualTS < 1200) return // pause briefly after manual toggle
+      if (!detailsList.length) return
+
+      const centerY = window.innerHeight / 2
+      let best = null
+      let bestDist = Number.POSITIVE_INFINITY
+
+      for (const d of detailsList) {
+        const sum = d.querySelector(":scope > summary")
+        if (!sum) continue
+        const r = sum.getBoundingClientRect()
+        const cy = r.top + r.height / 2
+        const dist = Math.abs(cy - centerY)
+        if (dist < bestDist) {
+          bestDist = dist
+          best = d
+        }
+      }
+
+      if (!best) return
+
+      // open the nearest section
+      if (!best.open) best.open = true
+
+      // collapse sections far from center to reduce clutter
+      const collapseThreshold = Math.max(280, window.innerHeight * 0.9)
+      for (const d of detailsList) {
+        if (d === best) continue
+        const sum = d.querySelector(":scope > summary")
+        if (!sum) continue
+        const r = sum.getBoundingClientRect()
+        const cy = r.top + r.height / 2
+        const dist = Math.abs(cy - centerY)
+        if (dist > collapseThreshold && d.open) {
+          d.open = false
+        }
+      }
+    }
+
+    let ticking = false
+    const onScroll = () => {
+      if (!enabled) return
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(() => {
+        updateView()
+        ticking = false
+      })
+    }
+
+    const onResize = () => {
+      collectDetails()
+      updateView()
+    }
+
+    const activate = () => {
+      if (enabled) return
+      if (mqlReduced.matches) return
+      enabled = true
+      collectDetails()
+      window.addEventListener("scroll", onScroll, { passive: true })
+      window.addEventListener("resize", onResize)
+      updateView()
+    }
+
+    const deactivate = () => {
+      if (!enabled) return
+      enabled = false
+      window.removeEventListener("scroll", onScroll)
+      window.removeEventListener("resize", onResize)
+    }
+
+    const reevaluate = () => {
+      if (mqlSmall.matches && !mqlReduced.matches) {
+        activate()
+      } else {
+        deactivate()
+      }
+    }
+
+    // react to preference/viewport changes
+    mqlSmall.addEventListener?.("change", reevaluate)
+    mqlReduced.addEventListener?.("change", reevaluate)
+    reevaluate()
   }
 })()
