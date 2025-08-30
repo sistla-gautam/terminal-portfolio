@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>personal.json</title>
+  <title>s.gautam</title>
   <style>
     html, body {
       margin: 0;
@@ -19,7 +19,8 @@
     pre {
       margin: 0;
       padding: 1rem;
-      white-space: pre;
+      white-space: pre-wrap;
+      word-wrap: break-word;
       overflow: auto;
     }
     .header {
@@ -82,7 +83,7 @@
     }
 
     function linkifyEsc(escaped){
-      const urlRe = /(https?:\/\/[^\s<>"']+)/g;
+      const urlRe = /(https?:\/\/[^\s<>"]+)/g;
       return escaped.replace(urlRe, u => `<a href="${u}" target="_blank" rel="noopener noreferrer">${u}</a>`);
     }
 
@@ -139,7 +140,7 @@
 
     function updateHeader(){
       const now = new Date();
-      header.innerHTML = `${now.toLocaleString()}  ~/user/personal.json <span class="cursor"></span>`;
+      header.innerHTML = `${now.toLocaleString()}  ~/user/s.gautam <span class="cursor"></span>`;
     }
 
     setInterval(updateHeader, 1000);
