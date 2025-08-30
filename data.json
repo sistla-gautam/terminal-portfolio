@@ -4,7 +4,8 @@
     "location": "Bangalore, India",
     "description": "full-stack engineer / dashboards & auth flows / software systems ",
     "born": "October 2001",
-    "other_links": {
+    "contact": {
+      "email": "sistlagautham@gmail.com",
       "github": "https://github.com/sistla-gautam",
       "personal_website": "https://sgautam.in"
     }
