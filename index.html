@@ -32,7 +32,7 @@
       display: inline-block;
       width: 8px;
       height: 1em;
-      vertical-align: bottom;
+      vertical-align: middle; /* ensure alignment with text baseline */
       background: #d8dee9;
       animation: blink 1s step-start infinite;
     }
@@ -72,7 +72,7 @@
 
   <script>
     function escapeHtml(s){
-      return s.replace(/[&<>\"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
+      return s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
     }
 
     function linkify(str){
@@ -98,7 +98,7 @@
     function updateHeader() {
       const now = new Date();
       const dateStr = now.toLocaleString();
-      header.innerHTML = `${dateStr}  ~/user/personal.json <span class=\"cursor\"></span>`;
+      header.innerHTML = `${dateStr}  ~/user/personal.json <span class="cursor"></span>`;
     }
 
     setInterval(updateHeader, 1000);
