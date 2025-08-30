@@ -112,6 +112,7 @@
     const details = document.createElement("details")
     details.className = "json-node"
     details.open = true
+    details.dataset.depth = String(depth)
 
     const summary = document.createElement("summary")
     summary.setAttribute("role", "treeitem")
@@ -223,6 +224,7 @@
     const details = document.createElement("details")
     details.className = "json-node"
     details.open = true
+    details.dataset.depth = String(depth)
 
     const summary = document.createElement("summary")
     summary.setAttribute("role", "treeitem")
@@ -405,16 +407,16 @@
     const mqlSmall = window.matchMedia("(max-width: 768px)")
     const mqlReduced = window.matchMedia("(prefers-reduced-motion: reduce)")
     let enabled = false
-    let detailsList = []
-    const scrollHandler = null
-    const resizeHandler = null
+
+    /** @type {{el: HTMLDetailsElement, sum: HTMLElement|null, parent: HTMLDetailsElement|null, depth: number, isRoot: boolean}[]} */
+    let items = []
     let lastManualTS = 0
 
     const collectDetails = () => {
-      detailsList = Array.from(root.querySelectorAll("details.json-node"))
-      // mark manual interactions on summary clicks to avoid fighting the user
-      detailsList.forEach((d) => {
+      const nodes = Array.from(root.querySelectorAll("details.json-node"))
+      items = nodes.map((d) => {
         const sum = d.querySelector(":scope > summary")
+        // mark manual interactions on summary clicks to avoid fighting the user
         if (sum && !sum.dataset._mobBound) {
           sum.addEventListener(
             "click",
@@ -425,46 +427,62 @@
           )
           sum.dataset._mobBound = "1"
         }
+        const parent = d.parentElement?.closest("details.json-node")
+        const depth = Number.parseInt(d.dataset.depth || "0", 10)
+        return { el: d, sum, parent, depth, isRoot: depth === 0 }
       })
+    }
+
+    const ensureAncestorsOpen = (node) => {
+      let current = node
+      while (current) {
+        if (!current.open) current.open = true
+        current = current.parentElement?.closest("details.json-node")
+      }
     }
 
     const updateView = () => {
       if (!enabled) return
       if (Date.now() - lastManualTS < 1200) return // pause briefly after manual toggle
-      if (!detailsList.length) return
+      if (!items.length) return
+
+      // Always keep the root(s) open
+      for (const it of items) {
+        if (it.isRoot && !it.el.open) it.el.open = true
+      }
 
       const centerY = window.innerHeight / 2
       let best = null
       let bestDist = Number.POSITIVE_INFINITY
 
-      for (const d of detailsList) {
-        const sum = d.querySelector(":scope > summary")
-        if (!sum) continue
-        const r = sum.getBoundingClientRect()
+      for (const it of items) {
+        const anchor = it.sum || it.el
+        const r = anchor.getBoundingClientRect()
         const cy = r.top + r.height / 2
         const dist = Math.abs(cy - centerY)
         if (dist < bestDist) {
           bestDist = dist
-          best = d
+          best = it
         }
       }
-
       if (!best) return
 
-      // open the nearest section
-      if (!best.open) best.open = true
+      // Open the nearest section and all its ancestors
+      if (!best.el.open) best.el.open = true
+      ensureAncestorsOpen(best.el)
 
-      // collapse sections far from center to reduce clutter
+      // Collapse only siblings that share the same parent (same depth)
+      const siblings = items.filter((it) => it.parent === best.parent && it.el !== best.el)
+
       const collapseThreshold = Math.max(280, window.innerHeight * 0.9)
-      for (const d of detailsList) {
-        if (d === best) continue
-        const sum = d.querySelector(":scope > summary")
-        if (!sum) continue
-        const r = sum.getBoundingClientRect()
+      for (const sib of siblings) {
+        if (sib.isRoot) continue // never collapse root
+        const anchor = sib.sum || sib.el
+        const r = anchor.getBoundingClientRect()
         const cy = r.top + r.height / 2
         const dist = Math.abs(cy - centerY)
-        if (dist > collapseThreshold && d.open) {
-          d.open = false
+        if (dist > collapseThreshold && sib.el.open) {
+          sib.el.open = false
         }
       }
     }
@@ -490,6 +508,10 @@
       if (mqlReduced.matches) return
       enabled = true
       collectDetails()
+      // keep root open immediately upon activation
+      for (const it of items) {
+        if (it.isRoot && !it.el.open) it.el.open = true
+      }
       window.addEventListener("scroll", onScroll, { passive: true })
       window.addEventListener("resize", onResize)
       updateView()
