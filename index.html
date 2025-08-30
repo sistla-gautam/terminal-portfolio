@@ -24,7 +24,7 @@
     }
     .header {
       padding: 0.5rem 1rem;
-      background: #3b4252;
+      background: #2e3440; /* match terminal background */
       color: #a3be8c;
       font-weight: bold;
     }
@@ -41,21 +41,21 @@
     }
 
     /* Nord palette highlighting */
-    .k { color: #81a1c1; font-weight: bold; }     /* keys */
-    .s { color: #a3be8c; }                        /* string values */
-    .n { color: #b48ead; font-weight: bold; }     /* numbers */
-    .b { color: #bf616a; font-weight: bold; }     /* booleans */
-    .null { color: #ebcb8b; font-weight: bold; }  /* null */
-    .p { color: #88c0d0; font-weight: bold; }     /* punctuation */
-    .br { color: #5e81ac; font-weight: bold; }    /* brackets/braces */
+    .k { color: #5e81ac; font-weight: bold; }
+    .s { color: #a3be8c; }
+    .n { color: #b48ead; font-weight: bold; }
+    .b { color: #bf616a; font-weight: bold; }
+    .null { color: #ebcb8b; font-weight: bold; }
+    .p { color: #88c0d0; font-weight: bold; }
+    .br { color: #81a1c1; font-weight: bold; }
     a { color: #8fbcbb; text-decoration: none; }
     a:hover { text-decoration: underline; }
 
     @media (prefers-color-scheme: light) {
       html, body { background: #eceff4; color: #2e3440; }
-      .header { background: #d8dee9; color: #5e81ac; }
+      .header { background: #eceff4; color: #5e81ac; }
       .cursor { background: #2e3440; }
-      .k { color: #5e81ac; font-weight: bold; }
+      .k { color: #005f87; font-weight: bold; }
       .s { color: #d08770; }
       .n { color: #a3be8c; font-weight: bold; }
       .b { color: #bf616a; font-weight: bold; }
@@ -98,7 +98,7 @@
     function updateHeader() {
       const now = new Date();
       const dateStr = now.toLocaleString();
-      header.innerHTML = `${dateStr}  ~/user/personal.json <span class="cursor"></span>`;
+      header.innerHTML = `${dateStr}  ~/user/personal.json <span class=\"cursor\"></span>`;
     }
 
     setInterval(updateHeader, 1000);
