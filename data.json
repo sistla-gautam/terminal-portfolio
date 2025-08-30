@@ -16,8 +16,8 @@
       "year": "03/2024 - Present",
       "company": "NicheSolv (Client: Yokogawa)",
       "role": "Web Developer",
-      "location": "Bangalore, India",
-      "hq": "Bangalore, India",
+      "location": "Bangalore",
+      "hq": "India",
       "work": [
         "Redesigned multi-tenant authentication and token flows, reducing login-related failures by 40% and improving user onboarding efficiency by 60%",
         "Integrated Keycloak, SAP CDC, Waylay, and Appsmith into enterprise identity workflows, decreasing integration-related support tickets by 35%",
@@ -47,7 +47,7 @@
       "year": "06/2023 - 01/2024",
       "company": "Renderpub",
       "role": "Full Stack Developer",
-      "location": "Bangalore, India",
+      "location": "Bangalore",
       "hq": "India",
       "work": [
         "Maintained and deployed Renderpub Launcher, reducing downtime incidents by 50% and improving release reliability",
@@ -68,7 +68,7 @@
       "year": "02/2023 - 05/2023",
       "company": "Renderpub",
       "role": "Web Developer Intern",
-      "location": "Bangalore, India",
+      "location": "Bangalore",
       "hq": "India",
       "work": [
         "Delivered core product modules in SvelteKit, Three.js, React, and Node.js, improving app stability and scalability for production use",
