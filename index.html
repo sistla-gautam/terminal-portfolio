@@ -74,27 +74,30 @@
   <pre id="out"></pre>
 
   <script>
-    function escapeHtml(s){
-      return s.replace(/[&<>\"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-    }
-
     function linkify(str){
       const urlRe = /(https?:\/\/[^\s\"']+)/g;
       return str.replace(urlRe, u => `<a href="${u}" target="_blank" rel="noopener noreferrer">${u}</a>`);
     }
 
     function syntaxHighlight(json){
-      const text = JSON.stringify(json, null, 2);
-      let esc = escapeHtml(text)
-        .replace(/\"(.*?)\"(?=\s*:)/g, '<span class="k">"$1"</span>') // keys
-        .replace(/:\s*\"(.*?)\"/g, match => `: <span class="s">${linkify(match.slice(2))}</span>`) // string values
+      let text = JSON.stringify(json, null, 2);
+
+      // apply syntax highlighting BEFORE escaping
+      text = text
+        .replace(/"(.*?)"(?=\s*:)/g, '<span class="k">"$1"</span>') // keys
+        .replace(/:\s*"(.*?)"/g, (m, g1) => `: <span class="s">${linkify('"' + g1 + '"')}</span>`) // string values
         .replace(/\b(true|false)\b/g, '<span class="b">$1</span>')
         .replace(/\b(-?\d+(?:\.\d+)?)\b/g, '<span class="n">$1</span>')
         .replace(/\bnull\b/g, '<span class="null">null</span>')
         .replace(/[\{\}\[\]]/g, m => `<span class="br">${m}</span>`)
         .replace(/[\:,]/g, m => `<span class="p">${m}</span>`);
 
-      return esc;
+      // escape only outside of spans
+      text = text.replace(/&(?![a-zA-Z]+;)/g, '&amp;')
+                 .replace(/</g, m => m === '<' ? '&lt;' : m)
+                 .replace(/>/g, m => m === '>' ? '&gt;' : m);
+
+      return text.replace(/&lt;span/g, '<span').replace(/span&gt;/g, 'span>');
     }
 
     const header = document.getElementById('header');
