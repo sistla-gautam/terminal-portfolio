@@ -1,44 +1,95 @@
 {
-  "name": "Alex Doe",
-  "bio": "Full-stack developer crafting delightful web experiences with vanilla JS, TypeScript, and Next.js.",
-  "location": "Remote • UTC-5",
-  "contact": {
-    "email": "alex@example.com",
-    "website": "https://alex.example.com",
-    "github": "https://github.com/alexdoe",
-    "linkedin": "https://www.linkedin.com/in/alexdoe/"
-  },
-  "skills": ["JavaScript", "TypeScript", "React", "Next.js", "Node.js", "CSS", "Accessibility", "Testing"],
-  "projects": [
-    {
-      "name": "Terminal JSON Portfolio",
-      "description": "A personal site that mimics a terminal and renders collapsible JSON.",
-      "url": "https://alex.example.com/terminal-json",
-      "stack": ["HTML", "CSS", "JavaScript"]
-    },
-    {
-      "name": "Image Optimizer",
-      "description": "Transforms and optimizes images on-the-fly.",
-      "url": "https://github.com/alexdoe/image-optimizer",
-      "stack": ["Node.js", "Sharp", "Cloud Functions"]
+  "personal_info": {
+    "name": "Sistla Gautam",
+    "location": "Bangalore, India",
+    "description": "full-stack engineer / dashboards & auth flows / software systems ",
+    "born": "October 2001",
+    "other_links": {
+      "github": "https://github.com/sistla-gautam",
+      "personal_website": "https://sgautam.in"
     }
-  ],
-  "experience": [
+  },
+  "timezone": "GMT+5:30",
+  "work_experience": [
     {
-      "company": "Acme Corp",
-      "role": "Senior Frontend Engineer",
-      "period": "2022 — Present",
-      "highlights": [
-        "Led migration to modern CSS architecture",
-        "Built internal component library with accessibility first"
+      "year": "03/2024 - Present",
+      "company": "NicheSolv (Client: Yokogawa)",
+      "role": "Web Developer",
+      "location": "Bangalore, India",
+      "hq": "Bangalore, India",
+      "work": [
+        "Redesigned multi-tenant authentication and token flows, reducing login-related failures by 40% and improving user onboarding efficiency by 60%",
+        "Integrated Keycloak, SAP CDC, Waylay, and Appsmith into enterprise identity workflows, decreasing integration-related support tickets by 35%",
+        "Optimized React-based BI micro-frontends (bi-viewer, dashboard-viewer, biviewer-portal), cutting dashboard load times by ~30% and improving adoption rates",
+        "Developed C#/.NET microservices (SyncUsersService, token APIs), reducing authentication latency by 25% and increasing reliability of service-to-service auth",
+        "Fixed redirect URI, tenant routing, and query persistence issues, reducing session drop-offs by ~35%",
+        "Introduced scoped UI/UX system (design tokens, CSS isolation, Shadow DOM) reducing styling conflicts by 80% across micro-frontends",
+        "Enhanced BI visualization (SVG scaling, z-index overlays, widget rendering) which cut UI-related bug reports by half and improved analyst productivity"
+      ],
+      "tech": [
+        "react",
+        "typescript",
+        "c#/.net",
+        "spring boot",
+        "node.js",
+        "express",
+        "docker",
+        "appsmith",
+        "apache guacamole",
+        "keycloak",
+        "haproxy",
+        "nginx",
+        "yarn"
       ]
     },
     {
-      "company": "Beta Labs",
-      "role": "Software Engineer",
-      "period": "2019 — 2022",
-      "highlights": ["Shipped real-time collaboration features", "Maintained CI/CD pipelines and testing infra"]
+      "year": "06/2023 - 01/2024",
+      "company": "Renderpub",
+      "role": "Full Stack Developer",
+      "location": "Bangalore, India",
+      "hq": "India",
+      "work": [
+        "Maintained and deployed Renderpub Launcher, reducing downtime incidents by 50% and improving release reliability",
+        "Developed Renderpub Studio (SvelteKit + Electron.js), streamlining project launch workflows and cutting manual setup time by ~40%",
+        "Delivered immersive metaverse features for BCCI using SvelteKit and Three.js, boosting user engagement and interaction metrics",
+        "Collaborated with cross-functional teams, accelerating delivery cycles by 20% through shared tooling and workflows"
+      ],
+      "tech": [
+        "sveltekit",
+        "electron.js",
+        "three.js",
+        "bootstrap",
+        "react",
+        "node.js"
+      ]
+    },
+    {
+      "year": "02/2023 - 05/2023",
+      "company": "Renderpub",
+      "role": "Web Developer Intern",
+      "location": "Bangalore, India",
+      "hq": "India",
+      "work": [
+        "Delivered core product modules in SvelteKit, Three.js, React, and Node.js, improving app stability and scalability for production use",
+        "Optimized internal dev/test pipelines, reducing build and testing cycles by ~25%, speeding up developer feedback loops"
+      ],
+      "tech": [
+        "sveltekit",
+        "three.js",
+        "react",
+        "node.js",
+        "cloudflare",
+        "Mondo BD",
+        "Cloudflare buckets"
+      ]
     }
   ],
-  "links": ["https://alex.example.com", "https://github.com/alexdoe", "https://www.linkedin.com/in/alexdoe/"]
+  "about_me": [
+    "Fueled by coffee",
+    "Reads books regularly",
+    "Hits the gym consistently",
+    "Builds and tweaks mechanical keyboards",
+    "Designs personal productivity tools",
+    "Experiments with RPG systems and storytelling"
+  ],
 }
