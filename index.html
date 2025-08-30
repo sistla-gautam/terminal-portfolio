@@ -40,12 +40,13 @@
       50% { background: transparent; }
     }
 
-    /* Nord palette */
-    .k { color: #81a1c1; }
-    .s { color: #88c0d0; }
-    .n { color: #b48ead; }
-    .b { color: #bf616a; }
-    .p { color: #eceff4; }
+    /* Nord palette highlighting */
+    .k { color: #81a1c1; font-weight: bold; }     /* keys */
+    .s { color: #88c0d0; font-weight: bold; }     /* strings */
+    .n { color: #b48ead; font-weight: bold; }     /* numbers */
+    .b { color: #bf616a; font-weight: bold; }     /* booleans */
+    .null { color: #ebcb8b; font-weight: bold; }  /* null */
+    .p { color: #eceff4; }                        /* punctuation */
     a { color: #8fbcbb; text-decoration: none; }
     a:hover { text-decoration: underline; }
 
@@ -53,10 +54,11 @@
       html, body { background: #eceff4; color: #2e3440; }
       .header { background: #d8dee9; color: #5e81ac; }
       .cursor { background: #2e3440; }
-      .k { color: #5e81ac; }
-      .s { color: #d08770; }
-      .n { color: #a3be8c; }
-      .b { color: #bf616a; }
+      .k { color: #5e81ac; font-weight: bold; }
+      .s { color: #d08770; font-weight: bold; }
+      .n { color: #a3be8c; font-weight: bold; }
+      .b { color: #bf616a; font-weight: bold; }
+      .null { color: #b48ead; font-weight: bold; }
       .p { color: #2e3440; }
       a { color: #5e81ac; }
     }
@@ -78,11 +80,12 @@
 
     function syntaxHighlight(json){
       const text = JSON.stringify(json, null, 2);
-      const esc = escapeHtml(text)
+      let esc = escapeHtml(text)
         .replace(/\"(.*?)\"(?=\s*:)/g, '<span class="k">"$1"</span>')
-        .replace(/:\s*\"(.*?)\"/g, match => `: <span class="s">${linkify(match.slice(2))}</span>`)
+        .replace(/:\s*\"(.*?)\"/g, match => `: <span class="s">${linkify(match.slice(2))}</span>`) // strings
         .replace(/\b(true|false)\b/g, '<span class="b">$1</span>')
-        .replace(/\b(-?\d+(?:\.\d+)?)\b/g, '<span class="n">$1</span>');
+        .replace(/\b(-?\d+(?:\.\d+)?)\b/g, '<span class="n">$1</span>')
+        .replace(/\bnull\b/g, '<span class="null">null</span>');
       return esc.replace(/[\{\}\[\]\:,]/g, m => `<span class="p">${m}</span>`);
     }
 
