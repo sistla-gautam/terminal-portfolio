@@ -11,8 +11,8 @@
       padding: 0;
       height: 100%;
       width: 100%;
-      background: #2e3440;
-      color: #d8dee9;
+      background: #0c0c0c; /* darker background */
+      color: #e5e5e5; /* muted light foreground */
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-size: 14px;
       line-height: 1.5;
@@ -26,8 +26,8 @@
     }
     .header {
       padding: 0.5rem 1rem;
-      background: #2e3440; /* match terminal background */
-      color: #a3be8c;
+      background: #111; /* darker header */
+      color: #33ff33; /* green prompt text */
       font-weight: bold;
     }
     .cursor {
@@ -35,39 +35,39 @@
       width: 8px;
       height: 1em;
       vertical-align: middle;
-      background: #d8dee9;
+      background: #e5e5e5;
       animation: blink 1s step-start infinite;
     }
     @keyframes blink {
       50% { background: transparent; }
     }
 
-    /* Nord palette highlighting */
-    .k { color: #81a1c1; font-weight: bold; } /* keys */
-    .s { color: #a3be8c; } /* string values */
-    .n { color: #b48ead; font-weight: bold; } /* numbers */
-    .b { color: #bf616a; font-weight: bold; } /* booleans */
-    .null { color: #ebcb8b; font-weight: bold; }
-    .p { color: #88c0d0; } /* punctuation muted */
-    .br { color: #5e81ac; font-weight: bold; } /* brackets */
-    .muted { color: #4c566a; } /* dull fallback */
+    /* Terminal-style palette highlighting */
+    .k { color: #33aaff; font-weight: bold; } /* keys - cyan/blue */
+    .s { color: #cccc66; } /* string values - yellow */
+    .n { color: #ff66ff; font-weight: bold; } /* numbers - magenta */
+    .b { color: #ff3333; font-weight: bold; } /* booleans - red */
+    .null { color: #9999ff; font-weight: bold; } /* null - purple/blue */
+    .p { color: #888888; } /* punctuation muted */
+    .br { color: #33ff33; font-weight: bold; } /* brackets - green */
+    .muted { color: #555; } /* dull fallback */
 
-    a { color: #8fbcbb; text-decoration: none; }
+    a { color: #33cc99; text-decoration: none; }
     a:hover { text-decoration: underline; }
 
     @media (prefers-color-scheme: light) {
-      html, body { background: #eceff4; color: #2e3440; }
-      .header { background: #eceff4; color: #5e81ac; }
-      .cursor { background: #2e3440; }
+      html, body { background: #fafafa; color: #111; }
+      .header { background: #f0f0f0; color: #006600; }
+      .cursor { background: #111; }
       .k { color: #005f87; font-weight: bold; }
-      .s { color: #d08770; }
-      .n { color: #a3be8c; font-weight: bold; }
-      .b { color: #bf616a; font-weight: bold; }
-      .null { color: #b48ead; font-weight: bold; }
-      .p { color: #4c566a; }
-      .br { color: #2e3440; font-weight: bold; }
-      .muted { color: #7c818c; }
-      a { color: #5e81ac; }
+      .s { color: #cc6600; }
+      .n { color: #006699; font-weight: bold; }
+      .b { color: #990000; font-weight: bold; }
+      .null { color: #660099; font-weight: bold; }
+      .p { color: #555; }
+      .br { color: #222; font-weight: bold; }
+      .muted { color: #777; }
+      a { color: #004466; }
     }
   </style>
 </head>
@@ -89,16 +89,11 @@
     }
 
     function processTextFragment(s){
-      // s is plain JSON fragment (not a quoted string). escape it then apply token styles.
       let out = escapeHtml(s);
-      // booleans/null
       out = out.replace(/\b(true|false)\b/g, m => `<span class="b">${m}</span>`);
       out = out.replace(/\bnull\b/g, m => `<span class="null">${m}</span>`);
-      // numbers
       out = out.replace(/\b(-?\d+(?:\.\d+)?)\b/g, (m, p1) => `<span class="n">${p1}</span>`);
-      // brackets and braces
       out = out.replace(/([{}\[\]])/g, '<span class="br">$1</span>');
-      // punctuation
       out = out.replace(/([:,])/g, '<span class="p">$1</span>');
       return out;
     }
@@ -114,7 +109,7 @@
         if (m.index > lastIndex){
           parts.push({type: 'text', text: text.slice(lastIndex, m.index)});
         }
-        const raw = m[0]; // includes surrounding quotes
+        const raw = m[0];
         let inner = '';
         try { inner = JSON.parse(raw); } catch(e) { inner = raw.slice(1, -1).replace(/\\"/g, '"'); }
 
@@ -128,11 +123,9 @@
       }
       if (lastIndex < text.length) parts.push({type: 'text', text: text.slice(lastIndex)});
 
-      // build HTML
       return parts.map(p => {
         if (p.type === 'text') return processTextFragment(p.text);
         if (p.type === 'key') return `<span class="k">"${escapeHtml(p.text)}"</span>`;
-        // string value: escape, linkify and wrap
         return `<span class="s">"${linkifyEsc(escapeHtml(p.text))}"</span>`;
       }).join('');
     }
