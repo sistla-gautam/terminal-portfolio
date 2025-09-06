@@ -11,8 +11,8 @@
       padding: 0;
       height: 100%;
       width: 100%;
-      background: #0c0c0c; /* background (color 1) */
-      color: #e5e5e5; /* single foreground color (color 2) */
+      background: #0c0c0c; /* black background */
+      color: #9fc5ff; /* base foreground (lighter shade) */
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-size: 14px;
       line-height: 1.5;
@@ -27,7 +27,7 @@
     .header {
       padding: 0.5rem 1rem;
       background: #111;
-      color: #e5e5e5;
+      color: #9fc5ff;
       font-weight: bold;
     }
     .cursor {
@@ -35,52 +35,47 @@
       width: 8px;
       height: 1em;
       vertical-align: middle;
-      background: #e5e5e5;
+      background: #9fc5ff;
       animation: blink 1s step-start infinite;
     }
     @keyframes blink {
       50% { background: transparent; }
     }
 
-    /* One-color scheme */
-    .k,
-    .s,
-    .n,
-    .b,
-    .null,
-    .br,
-    a {
-      color: #e5e5e5;
-    }
+    /* Single-color palette: light + dark shades */
+    .k { color: #9fc5ff; font-weight: bold; } /* keys - lighter */
+    .s { color: #3973ac; } /* string values - darker */
+    .n { color: #3973ac; font-weight: bold; } /* numbers */
+    .b { color: #3973ac; font-weight: bold; } /* booleans */
+    .null { color: #3973ac; font-weight: bold; } /* null */
+    .p { color: #555; } /* punctuation muted */
+    .br { color: #9fc5ff; font-weight: bold; } /* brackets */
+    .muted { color: #333; } /* fallback muted */
 
-    .p,
-    .muted {
-      color: #888; /* dimmer shade of the same color */
-    }
-
-    a { text-decoration: none; }
+    a { color: #3973ac; text-decoration: none; }
     a:hover { text-decoration: underline; }
 
-    @media (prefers-color-scheme: light) {
-      html, body { background: #fafafa; color: #111; }
-      .header { background: #f0f0f0; color: #111; }
-      .cursor { background: #111; }
-
-      .k,
-      .s,
-      .n,
-      .b,
-      .null,
-      .br,
-      a { color: #111; }
-
-      .p,
-      .muted { color: #555; }
+    .ascii {
+      padding: 1rem;
+      white-space: pre;
+      color: #9fc5ff;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <div class="header" id="header"></div>
+  <div class="ascii">
+_____/\\\\\\\\\\\_______/\\\\\\\\\\\\_        
+ ___/\\\/////////\\\___/\\\//////////__       
+  __\//\\\______\///___/\\\_____________      
+   ___\////\\\_________\/\\\____/\\\\\\\_     
+    ______\////\\\______\/\\\___\/////\\\_    
+     _________\////\\\___\/\\\_______\/\\\_   
+      __/\\\______\//\\\__\/\\\_______\/\\\_  
+       _\///\\\\\\\\\\\/___\//\\\\\\\\\\\\/__ 
+        ___\///////////______\////////////____
+  </div>
   <pre id="out"></pre>
 
   <script>
