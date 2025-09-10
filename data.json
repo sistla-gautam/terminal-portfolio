@@ -62,7 +62,7 @@
         "bootstrap",
         "react",
         "node.js",
-        "mongo BD",
+        "Mongo DB",
         "Cloudflare buckets"
       ]
     },
@@ -82,7 +82,7 @@
         "react",
         "node.js",
         "cloudflare",
-        "mongo BD",
+        "Mongo DB",
         "Cloudflare buckets"
       ]
     }
