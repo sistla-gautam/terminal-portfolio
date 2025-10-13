@@ -2,7 +2,7 @@
   "personal_info": {
     "name": "Sistla Gautam",
     "location": "Bangalore, India",
-    "description": "full-stack engineer / dashboards & auth flows / software systems",
+    "description": "full-stack engineer | dashboards & auth flows | software systems",
     "born": "October 2001",
     "contact": {
       "email": "sistlagautham@gmail.com",
@@ -36,7 +36,7 @@
         "express",
         "docker",
         "haproxy",
-        "nginx",
+        "nginx"
       ]
     },
     {
