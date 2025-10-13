@@ -1,155 +1,174 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>s.gautam</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistla Gautam - Full Stack Engineer</title>
   <style>
-    html, body {
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #ffffff;
+      color: #323336;
       margin: 0;
       padding: 0;
-      height: 100%;
-      width: 100%;
-      background: #0c0c0c; /* black background */
-      color: #9fc5ff; /* base foreground (lighter shade) */
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 60px 24px;
+    }
+    header {
+      position: relative;
+      margin-bottom: 48px;
+    }
+    header h1 {
+      font-size: 28px;
+      text-transform: uppercase;
+      letter-spacing: 1.3px;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #323336;
+    }
+    header h2 {
+      font-size: 18px;
+      color: #707678;
+      margin-bottom: 6px;
+      font-weight: 400;
+    }
+    header p {
+      color: #707678;
+      font-size: 16px;
+      line-height: 1.4;
+      margin-bottom: 4px;
+    }
+    header .logo-box {
+      position: absolute;
+      top: 0;
+      left: -60px;
+      background-color: #43F398;
+      width: 40px;
+      height: 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-weight: 600;
       font-size: 14px;
-      line-height: 1.5;
+      color: #000000;
     }
-    pre {
+    section {
+      margin-bottom: 48px;
+    }
+    h3.section-title {
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 1.2px;
+      color: #A6AAAD;
+      margin-bottom: 24px;
+    }
+    .job, .education-item {
+      margin-bottom: 32px;
+    }
+    .job h4, .education-item h4 {
+      text-transform: uppercase;
+      font-size: 18px;
+      letter-spacing: 0.07em;
+      margin-bottom: 4px;
+      color: #323336;
+    }
+    .job .role, .education-item .degree {
+      color: #707678;
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+    .job ul, .education-item ul {
       margin: 0;
-      padding: 1rem;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      overflow: auto;
+      padding-left: 20px;
     }
-    .header {
-      padding: 0.5rem 1rem;
-      background: #111;
-      color: #9fc5ff;
-      font-weight: bold;
+    .job li, .education-item li {
+      font-size: 16px;
+      color: #323336;
+      margin-bottom: 6px;
     }
-    .cursor {
-      display: inline-block;
-      width: 8px;
-      height: 1em;
-      vertical-align: middle;
-      background: #9fc5ff;
-      animation: blink 1s step-start infinite;
+    .skills, .about {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
     }
-    @keyframes blink {
-      50% { background: transparent; }
-    }
-
-    /* Single-color palette: light + dark shades */
-    .k { color: #9fc5ff; font-weight: bold; } /* keys - lighter */
-    .s { color: #3973ac; } /* string values - darker */
-    .n { color: #3973ac; font-weight: bold; } /* numbers */
-    .b { color: #3973ac; font-weight: bold; } /* booleans */
-    .null { color: #3973ac; font-weight: bold; } /* null */
-    .p { color: #555; } /* punctuation muted */
-    .br { color: #9fc5ff; font-weight: bold; } /* brackets */
-    .muted { color: #333; } /* fallback muted */
-
-    a { color: #3973ac; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-
-    .ascii {
-      padding: 1rem;
-      white-space: pre;
-      color: #9fc5ff;
-      font-weight: bold;
+    .skill, .about-item {
+      background-color: #f1f5f7;
+      padding: 6px 16px;
+      font-size: 14px;
+      color: #323336;
+      border-radius: 4px;
     }
   </style>
 </head>
 <body>
-  <div class="header" id="header"></div>
-  <div class="ascii">
-_____/\\\\\\\\\\\_______/\\\\\\\\\\\\_        
- ___/\\\/////////\\\___/\\\//////////__       
-  __\//\\\______\///___/\\\_____________      
-   ___\////\\\_________\/\\\____/\\\\\\\_     
-    ______\////\\\______\/\\\___\/////\\\_    
-     _________\////\\\___\/\\\_______\/\\\_   
-      __/\\\______\//\\\__\/\\\_______\/\\\_  
-       _\///\\\\\\\\\\\/___\//\\\\\\\\\\\\/__ 
-        ___\///////////______\////////////____
+  <div class="container">
+    <header>
+      <div class="logo-box">
+        <div>S</div>
+        <div>G</div>
+      </div>
+      <h1 id="name"></h1>
+      <h2 id="description"></h2>
+      <p id="location"></p>
+      <p id="contact"></p>
+    </header>
+
+    <section id="work-section">
+      <h3 class="section-title">Work Experience</h3>
+      <div id="work"></div>
+    </section>
+
+    <section>
+      <h3 class="section-title">About Me</h3>
+      <div class="about" id="about"></div>
+    </section>
   </div>
-  <pre id="out"></pre>
 
   <script>
-    // Utilities
-    function escapeHtml(s){
-      return s.replace(/&/g, '&amp;')
-              .replace(/</g, '&lt;')
-              .replace(/>/g, '&gt;');
-    }
-
-    function linkifyEsc(escaped){
-      const urlRe = /(https?:\/\/[^\s<>\"]+)/g;
-      return escaped.replace(urlRe, u => `<a href="${u}" target="_blank" rel="noopener noreferrer">${u}</a>`);
-    }
-
-    function processTextFragment(s){
-      let out = escapeHtml(s);
-      out = out.replace(/\b(true|false)\b/g, m => `<span class="b">${m}</span>`);
-      out = out.replace(/\bnull\b/g, m => `<span class="null">${m}</span>`);
-      out = out.replace(/\b(-?\d+(?:\.\d+)?)\b/g, (m, p1) => `<span class="n">${p1}</span>`);
-      out = out.replace(/([{}\[\]])/g, '<span class="br">$1</span>');
-      out = out.replace(/([:,])/g, '<span class="p">$1</span>');
-      return out;
-    }
-
-    function highlightJSON(obj){
-      const text = JSON.stringify(obj, null, 2);
-      const stringRegex = /"(?:\\.|[^"\\])*"/g;
-      let lastIndex = 0;
-      let parts = [];
-      let m;
-
-      while ((m = stringRegex.exec(text)) !== null){
-        if (m.index > lastIndex){
-          parts.push({type: 'text', text: text.slice(lastIndex, m.index)});
-        }
-        const raw = m[0];
-        let inner = '';
-        try { inner = JSON.parse(raw); } catch(e) { inner = raw.slice(1, -1).replace(/\\"/g, '"'); }
-
-        const rest = text.slice(m.index + raw.length);
-        const isKey = /^\s*:/.test(rest);
-
-        if (isKey) parts.push({type: 'key', text: inner});
-        else parts.push({type: 'string', text: inner});
-
-        lastIndex = m.index + raw.length;
-      }
-      if (lastIndex < text.length) parts.push({type: 'text', text: text.slice(lastIndex)});
-
-      return parts.map(p => {
-        if (p.type === 'text') return processTextFragment(p.text);
-        if (p.type === 'key') return `<span class="k">"${escapeHtml(p.text)}"</span>`;
-        return `<span class="s">"${linkifyEsc(escapeHtml(p.text))}"</span>`;
-      }).join('');
-    }
-
-    const header = document.getElementById('header');
-
-    function updateHeader(){
-      const now = new Date();
-      header.innerHTML = `${now.toLocaleString()}  ~/user/s.gautam <span class="cursor"></span>`;
-    }
-
-    setInterval(updateHeader, 1000);
-    updateHeader();
-
-    fetch('./data.json')
-      .then(res => res.json())
+    fetch('data.json')
+      .then(response => response.json())
       .then(data => {
-        document.getElementById('out').innerHTML = highlightJSON(data);
-      })
-      .catch(err => {
-        document.getElementById('out').textContent = 'Error loading data.json: ' + err;
+        document.getElementById('name').textContent = data.personal_info.name;
+        document.getElementById('description').textContent = data.personal_info.description;
+        document.getElementById('location').textContent = `${data.personal_info.location} | Born ${data.personal_info.born}`;
+
+        const contact = data.personal_info.contact;
+        document.getElementById('contact').innerHTML = 
+          `<a href="mailto:${contact.email}">${contact.email}</a> | ` +
+          `<a href="${contact.github}">GitHub</a> | ` +
+          `<a href="${contact.personal_website}">Website</a>`;
+
+        const workContainer = document.getElementById('work');
+        data.work_experience.forEach(job => {
+          const div = document.createElement('div');
+          div.className = 'job';
+          div.innerHTML = `
+            <h4>${job.company}</h4>
+            <div class="role">${job.role} | ${job.year}</div>
+            <ul>${job.work.map(w => `<li>${w}</li>`).join('')}</ul>
+            <div class="skills">${job.tech.map(t => `<div class='skill'>${t}</div>`).join('')}</div>
+          `;
+          workContainer.appendChild(div);
+        });
+
+        const aboutContainer = document.getElementById('about');
+        data.about_me.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'about-item';
+          div.textContent = item;
+          aboutContainer.appendChild(div);
+        });
       });
   </script>
 </body>
