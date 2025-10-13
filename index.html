@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistla Gautam - Full Stack Engineer</title>
+  <title id="page-title"></title>
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background-color: #ffffff;
-      color: #323336;
+      background-color: #0e0e0e;
+      color: #e0e0e0;
       margin: 0;
       padding: 0;
     }
     a {
-      color: inherit;
+      color: #8ab4f8;
       text-decoration: none;
     }
     a:hover {
@@ -34,16 +34,16 @@
       letter-spacing: 1.3px;
       margin-bottom: 8px;
       font-weight: 600;
-      color: #323336;
+      color: #ffffff;
     }
     header h2 {
       font-size: 18px;
-      color: #707678;
+      color: #b0b0b0;
       margin-bottom: 6px;
       font-weight: 400;
     }
     header p {
-      color: #707678;
+      color: #b0b0b0;
       font-size: 16px;
       line-height: 1.4;
       margin-bottom: 4px;
@@ -52,7 +52,7 @@
       position: absolute;
       top: 0;
       left: -60px;
-      background-color: #43F398;
+      background-color: #00C853;
       width: 40px;
       height: 50px;
       display: flex;
@@ -70,31 +70,34 @@
       text-transform: uppercase;
       font-size: 12px;
       letter-spacing: 1.2px;
-      color: #A6AAAD;
+      color: #9e9e9e;
       margin-bottom: 24px;
     }
-    .job, .education-item {
+    .job {
       margin-bottom: 32px;
+      background-color: #1a1a1a;
+      border-radius: 8px;
+      padding: 16px;
     }
-    .job h4, .education-item h4 {
+    .job h4 {
       text-transform: uppercase;
       font-size: 18px;
       letter-spacing: 0.07em;
       margin-bottom: 4px;
-      color: #323336;
+      color: #ffffff;
     }
-    .job .role, .education-item .degree {
-      color: #707678;
+    .job .role {
+      color: #9e9e9e;
       font-size: 16px;
       margin-bottom: 6px;
     }
-    .job ul, .education-item ul {
+    .job ul {
       margin: 0;
       padding-left: 20px;
     }
-    .job li, .education-item li {
+    .job li {
       font-size: 16px;
-      color: #323336;
+      color: #e0e0e0;
       margin-bottom: 6px;
     }
     .skills, .about {
@@ -103,10 +106,10 @@
       gap: 8px;
     }
     .skill, .about-item {
-      background-color: #f1f5f7;
+      background-color: #2a2a2a;
       padding: 6px 16px;
       font-size: 14px;
-      color: #323336;
+      color: #e0e0e0;
       border-radius: 4px;
     }
   </style>
@@ -114,10 +117,7 @@
 <body>
   <div class="container">
     <header>
-      <div class="logo-box">
-        <div>S</div>
-        <div>G</div>
-      </div>
+      <div class="logo-box" id="logo"></div>
       <h1 id="name"></h1>
       <h2 id="description"></h2>
       <p id="location"></p>
@@ -139,6 +139,11 @@
     fetch('data.json')
       .then(response => response.json())
       .then(data => {
+        // Set dynamic title
+        document.title = `${data.personal_info.name} - ${data.personal_info.description}`;
+        document.getElementById('page-title').textContent = document.title;
+
+        // Set header info
         document.getElementById('name').textContent = data.personal_info.name;
         document.getElementById('description').textContent = data.personal_info.description;
         document.getElementById('location').textContent = `${data.personal_info.location} | Born ${data.personal_info.born}`;
@@ -146,9 +151,13 @@
         const contact = data.personal_info.contact;
         document.getElementById('contact').innerHTML = 
           `<a href="mailto:${contact.email}">${contact.email}</a> | ` +
-          `<a href="${contact.github}">GitHub</a> | ` +
-          `<a href="${contact.personal_website}">Website</a>`;
+          `<a href="${contact.github}">GitHub</a>`;
 
+        // Generate logo dynamically from initials
+        const initials = data.personal_info.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+        document.getElementById('logo').innerHTML = initials.split('').map(ch => `<div>${ch}</div>`).join('');
+
+        // Work experience
         const workContainer = document.getElementById('work');
         data.work_experience.forEach(job => {
           const div = document.createElement('div');
@@ -162,6 +171,7 @@
           workContainer.appendChild(div);
         });
 
+        // About section
         const aboutContainer = document.getElementById('about');
         data.about_me.forEach(item => {
           const div = document.createElement('div');
